@@ -12,7 +12,9 @@
       "default": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "check-types": "tsc -p tsconfig.json --noEmit",
     "clean": "rimraf dist *.tsbuildinfo",
@@ -22,6 +24,8 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "eslint": "^9.39.1",
+    "rimraf": "^6.1.2"
   }
 }

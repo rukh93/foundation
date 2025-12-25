@@ -15,7 +15,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9.39.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "rimraf": "^6.1.2"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
