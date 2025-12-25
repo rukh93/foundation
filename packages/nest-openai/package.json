@@ -1,0 +1,40 @@
+{
+  "name": "@repo/nest-openai",
+  "private": true,
+  "sideEffects": false,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "dev": "tsc -p tsconfig.build.json -w",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "openai": "^6.15.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.9",
+    "@nestjs/config": "^4.0.2"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^11.1.10",
+    "@nestjs/config": "^4.0.2",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^24.10.4",
+    "eslint": "^9.39.2",
+    "rimraf": "^6.1.2"
+  }
+}

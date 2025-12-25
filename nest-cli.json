@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/console/api/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/console/api/tsconfig.json"
+  },
+  "monorepo": true,
+  "root": "apps/console/api",
+  "projects": {
+    "console": {
+      "type": "application",
+      "root": "apps/console/api",
+      "entryFile": "main",
+      "sourceRoot": "apps/console/api/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/console/api/tsconfig.json"
+      }
+    },
+    "nest-clerk-role-mapper": {
+      "type": "library",
+      "root": "packages/nest-clerk-role-mapper",
+      "entryFile": "index",
+      "sourceRoot": "packages/nest-clerk-role-mapper/src",
+      "compilerOptions": {
+        "tsConfigPath": "packages/nest-clerk-role-mapper/tsconfig.json"
+      }
+    }
+  }
+}

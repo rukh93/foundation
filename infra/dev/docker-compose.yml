@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: hato-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: hato
+      POSTGRES_PASSWORD: hato
+      POSTGRES_DB: hato
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: hato-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: hato-redis
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    entrypoint: ["/usr/local/bin/redis-entrypoint.sh"]
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/config.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./docker/redis/entrypoint.sh:/usr/local/bin/redis-entrypoint.sh:ro
+    restart: unless-stopped
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    container_name: hato-meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_MASTER_KEY}
+    volumes:
+      - meilisearch_data:/meili_data
+      - ./docker/meilisearch/config.toml:/meili_data/config.toml:ro
+    command: ["meilisearch", "--config-file-path", "/meili_data/config.toml"]
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  rabbitmq_data:
+  redis_data:
+  meilisearch_data:

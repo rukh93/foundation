@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/typescript-config/nest",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/modules/*"]
+    }
+  }
+}

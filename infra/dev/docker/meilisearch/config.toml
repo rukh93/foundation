@@ -1,0 +1,7 @@
+# Meilisearch Configuration
+
+# Set the HTTP listening address
+http_addr = "0.0.0.0:7700"
+
+# Disable analytics
+no_analytics = true

@@ -1,0 +1,44 @@
+{
+  "name": "@repo/prisma",
+  "private": true,
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist *.tsbuildinfo src/generated",
+    "dev": "tsc -p tsconfig.build.json -w",
+    "lint": "eslint .",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:reset": "prisma migrate reset",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "@prisma/client-runtime-utils": "^7.2.0",
+    "@prisma/config": "^7.2.0"
+  },
+  "peerDependencies": {
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^24.10.4",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.2",
+    "prisma": "^7.2.0",
+    "rimraf": "^6.1.2",
+    "tsx": "^4.21.0"
+  }
+}

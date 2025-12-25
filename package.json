@@ -1,0 +1,52 @@
+{
+  "name": "hato-foundation",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "author": "Ruslan Khatoiev <r.hatoev@gmail.com>",
+  "scripts": {
+    "analyze": "turbo run analyze",
+    "build": "turbo run build",
+    "clean": "pnpm -r --parallel run clean",
+    "start:console": "turbo run start --filter=./apps/console/**",
+    "dev:console": "turbo run dev --filter=./apps/console/**",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "prisma:deploy": "turbo run prisma:deploy",
+    "prisma:generate": "turbo run prisma:generate",
+    "prisma:migrate": "turbo run prisma:migrate",
+    "prisma:push": "turbo run prisma:push",
+    "prisma:studio": "turbo run prisma:studio",
+    "prisma:seed": "turbo run prisma:seed"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@next/eslint-plugin-next": "16.1.1",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "16.1.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-turbo": "^2.7.2",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "globals": "^16.5.0",
+    "prettier": "^3.7.4",
+    "prisma": "^7.2.0",
+    "rimraf": "^6.1.2",
+    "turbo": "^2.7.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.50.1"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "engines": {
+    "node": ">=24"
+  }
+}

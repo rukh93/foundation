@@ -1,0 +1,32 @@
+{
+  "name": "@repo/sdk",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc -p tsconfig.json",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "dev": "tsc -p tsconfig.build.json -w",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^24.10.4",
+    "eslint": "^9.39.2",
+    "rimraf": "^6.1.2"
+  }
+}
