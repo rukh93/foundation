@@ -18,7 +18,7 @@ export class UserController {
 	async me(@CurrentUser() user: FastifyUser) {
     return this.httpService.createResponse<UserData>(
       HttpStatus.OK,
-      MessageAction.CREATE,
+      MessageAction.FIND_UNIQUE,
       MessageEntity.USER,
       await this.userService.me(user)
     );
