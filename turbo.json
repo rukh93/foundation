@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "globalEnv": ["ANALYZE", "NODE_ENV"],
-  "globalDependencies": ["**/.env.*local", "**/.env", "**/*.tsconfig.json"],
+  "globalDependencies": ["**/.env.*local", "**/.env", "**/tsconfig.json", "**/tsconfig*.json"],
   "tasks": {
     "build": {
       "dependsOn": ["^build", "^prisma:generate"],

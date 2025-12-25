@@ -1,15 +1,6 @@
 {
   "extends": "@repo/typescript-config/base",
   "compilerOptions": {
-    "jsx": "react",
-    "baseUrl": "./",
-    "paths": {
-      "@app/my-library": [
-        "libs/my-library/src"
-      ],
-      "@app/my-library/*": [
-        "libs/my-library/src/*"
-      ]
-    }
+    "jsx": "react"
   }
 }

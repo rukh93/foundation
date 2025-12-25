@@ -25,6 +25,8 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
-    "@types/node": "^25.0.3"
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.1",
+    "rimraf": "^6.1.2"
   }
 }
