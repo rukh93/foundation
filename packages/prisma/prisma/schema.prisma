@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Language {
+  id        String   @id @default(uuid()) @db.Uuid
+  value     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  users User[]
+}
+
+model User {
+  id          String     @id @default(uuid()) @db.Uuid
+  clerkUserId String     @unique
+  email       String     @unique
+  firstName   String?
+  lastName    String?
+  phone       String?
+  languageId  String?    @db.Uuid
+  status      UserStatus @default(Active)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
+
+  language    Language?                @relation(fields: [languageId], references: [id])
+  memberships OrganizationMembership[]
+}
+
+model OrganizationMembership {
+  id             String                     @id @default(uuid()) @db.Uuid
+  clerkOrgMemId  String                     @unique
+  organizationId String                     @db.Uuid
+  userId         String                     @db.Uuid
+  role           OrganizationMembershipRole @default(Member)
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @default(now()) @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model Organization {
+  id         String   @id @default(uuid()) @db.Uuid
+  clerkOrgId String   @unique
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  memberships OrganizationMembership[]
+}
+
+enum OrganizationMembershipRole {
+  Admin
+  Member
+}
+
+enum UserStatus {
+  Active
+  Banned
+  Locked
+}

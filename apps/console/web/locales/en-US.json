@@ -1,0 +1,108 @@
+{
+  "Pages": {
+    "account": "Account",
+    "billing": "Billing",
+    "general": "General",
+    "organization": "Organization",
+    "overview": "Overview",
+    "logout": "Logout",
+    "members": "Members",
+    "profile": "Profile",
+    "security": "Security"
+  },
+  "AccountPage": {
+    "title": "Account settings",
+    "subtitle": "Manage your personal information, security, and preferences"
+  },
+  "OrganizationPage": {
+    "title": "Organization settings",
+    "subtitle": "Manage your organization’s configuration, members, and billing details"
+  },
+  "OverviewPage": {
+    "title": "Overview",
+    "subtitle": "Everything you need to understand the current state of your system"
+  },
+  "SignInPage": {
+    "title": "Sign in to your account",
+    "subtitle": "Access your personalized dashboard"
+  },
+  "SignUpPage": {
+    "title": "Create an account",
+    "subtitle": "No credit card required."
+  },
+  "Unauthorized": {
+    "title": "Unauthorized",
+    "description": "You do not have permission to view this page. If you believe this is a mistake, please contact our support team.",
+    "contact": "Need help? <link>Contact support</link>"
+  },
+  "Theme": {
+    "breadcrumbs": {
+      "home": "Home"
+    }
+  },
+  "Validation": {
+    "shared": {
+      "unauthorized": "You are not authorized to access this resource. Please ensure you have the correct permissions or contact support for assistance.",
+      "somethingWentWrong": "Something went wrong"
+    },
+    "api": {
+      "SUCCESS_LANGUAGE_FIND_UNIQUE": "Language was loaded successfully.",
+      "SUCCESS_LANGUAGE_FIND_MANY": "Languages were loaded successfully.",
+      "ERROR_LANGUAGE_FIND_UNIQUE_P2025": "The requested language was not found.",
+      "ERROR_LANGUAGE_FIND_UNIQUE_UNKNOWN_ERROR": "Failed to load the language. Please try again.",
+      "ERROR_LANGUAGE_FIND_MANY_UNKNOWN_ERROR": "Failed to load languages. Please try again.",
+      "ERROR_MEILISEARCH_GET_INDEX_index_not_found": "The requested index does not exist.",
+      "ERROR_MEILISEARCH_GET_INDEX_invalid_index_uid": "The provided index name is invalid.",
+      "ERROR_MEILISEARCH_GET_INDEX_UNKNOWN_ERROR": "Failed to load the index. Please try again.",
+      "ERROR_MEILISEARCH_ADD_DOCUMENTS_index_not_found": "The index was not found when adding documents.",
+      "ERROR_MEILISEARCH_ADD_DOCUMENTS_invalid_request": "The documents format is invalid.",
+      "ERROR_MEILISEARCH_ADD_DOCUMENTS_invalid_document_id": "One or more document IDs are invalid.",
+      "ERROR_MEILISEARCH_ADD_DOCUMENTS_missing_document_id": "A document is missing the primary key.",
+      "ERROR_MEILISEARCH_ADD_DOCUMENTS_UNKNOWN_ERROR": "Failed to add documents. Please try again.",
+      "ERROR_MEILISEARCH_DELETE_DOCUMENTS_index_not_found": "The index was not found when deleting documents.",
+      "ERROR_MEILISEARCH_DELETE_DOCUMENTS_invalid_document_id": "Some document IDs are invalid.",
+      "ERROR_MEILISEARCH_DELETE_DOCUMENTS_invalid_request": "Invalid document deletion parameters.",
+      "ERROR_MEILISEARCH_DELETE_DOCUMENTS_UNKNOWN_ERROR": "Failed to delete documents. Please try again.",
+      "ERROR_MEILISEARCH_UPDATE_DOCUMENTS_index_not_found": "The index was not found when updating documents.",
+      "ERROR_MEILISEARCH_UPDATE_DOCUMENTS_invalid_document_id": "One or more document IDs are invalid.",
+      "ERROR_MEILISEARCH_UPDATE_DOCUMENTS_missing_document_id": "A document is missing the primary key.",
+      "ERROR_MEILISEARCH_UPDATE_DOCUMENTS_invalid_request": "Invalid update payload.",
+      "ERROR_MEILISEARCH_UPDATE_DOCUMENTS_UNKNOWN_ERROR": "Failed to update documents. Please try again.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_index_not_found": "The index was not found during search.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_invalid_search_query": "The search query is invalid.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_invalid_filter": "One or more filters are invalid.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_invalid_sort": "Sorting parameters are invalid or not allowed.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_invalid_request": "Search parameters are invalid.",
+      "ERROR_MEILISEARCH_SEARCH_DOCUMENTS_UNKNOWN_ERROR": "Failed to search documents. Please try again.",
+      "ERROR_ORGANIZATION_MEMBERSHIP_UPSERT_P2002": "This organization membership already exists.",
+      "ERROR_ORGANIZATION_MEMBERSHIP_UPSERT_LANGUAGE_P2025": "The default language configured for new users was not found.",
+      "ERROR_ORGANIZATION_MEMBERSHIP_UPSERT_UNKNOWN_ERROR": "Failed to update the organization membership. Please try again.",
+      "ERROR_ORGANIZATION_MEMBERSHIP_DELETE_P2025": "The organization membership you are trying to delete does not exist.",
+      "ERROR_ORGANIZATION_MEMBERSHIP_DELETE_UNKNOWN_ERROR": "Failed to delete the organization membership. Please try again.",
+      "ERROR_ORGANIZATION_DELETE_P2025": "The organization you tried to delete was not found.",
+      "ERROR_ORGANIZATION_DELETE_UNKNOWN_ERROR": "Failed to delete the organization. Please try again.",
+      "ERROR_ORGANIZATION_UPSERT_UNKNOWN_ERROR": "Failed to sync the organization. Please try again.",
+      "ERROR_USER_UPSERT_P2002": "A user with this email or Clerk ID already exists.",
+      "ERROR_USER_UPSERT_UNKNOWN_ERROR": "Failed to create or update the user. Please try again.",
+      "ERROR_USER_DELETE_P2025": "The user you tried to delete was not found.",
+      "ERROR_USER_DELETE_P2003": "The user cannot be deleted because it is referenced by other data.",
+      "ERROR_USER_DELETE_UNKNOWN_ERROR": "Failed to delete the user. Please try again.",
+      "SHARED_DTO_VALIDATION_ERROR": "Some of the provided data is invalid. Please review your input and try again.",
+      "USER_NOT_MEMBER_OF_CURRENT_ORGANIZATION": "You don't have access to this organization.",
+      "FAILED_SYNC_ORGANIZATION_MEMBERSHIP": "We couldn't sync your organization membership. Please refresh and try again.",
+      "UNAUTHORIZED": "You are not authorized to perform this action.",
+      "USER_NOT_IN_ORGANIZATION_CONTEXT": "No organization is associated with your current session.",
+      "UNKNOWN_ERROR": "An unexpected error occurred. Please try again.",
+      "NETWORK_ERROR": "An unexpected error occurred. Please try again.",
+      "SOMETHING_WENT_WRONG": "Something went wrong. Please try again."
+    },
+    "zod": {
+      "required": "This field is required",
+      "arrayLengthMin": "At least {value} option(s) is required",
+      "optionLengthMin": "The option label must contain at least {value} character(s).",
+      "optionLengthMax": "The option label cannot be longer than {value} character(s).",
+      "lengthMin": "This field must be at least {value} character(s) long",
+      "lengthMax": "This field cannot exceed {value} character(s)"
+    }
+  }
+}

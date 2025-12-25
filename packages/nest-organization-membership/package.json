@@ -1,0 +1,42 @@
+{
+  "name": "@repo/nest-organization-membership",
+  "private": true,
+  "sideEffects": false,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "dev": "tsc -p tsconfig.build.json -w",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@clerk/fastify": "^2.6.5",
+    "@repo/nest-clerk-role-mapper": "workspace:*",
+    "@repo/nest-language": "workspace:*",
+    "@repo/nest-organization": "workspace:*",
+    "@repo/nest-prisma": "workspace:*",
+    "@repo/nest-shared": "workspace:*",
+    "@repo/nest-user": "workspace:*",
+    "@repo/prisma": "workspace:*",
+    "@golevelup/nestjs-rabbitmq": "^6.1.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.9"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@nestjs/common": "^11.1.9",
+    "@types/node": "^22.15.3"
+  }
+}
