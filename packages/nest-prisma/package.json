@@ -29,11 +29,11 @@
     "@nestjs/config": "^4.0.2"
   },
   "devDependencies": {
+    "@nestjs/common": "^11.1.10",
+    "@nestjs/config": "^4.0.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@nestjs/common": "^11.1.9",
-    "@nestjs/config": "^4.0.2",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "rimraf": "^6.1.2"
   }
 }
