@@ -1,4 +1,4 @@
 export type UpsertOrganizationInput = {
-	clerkOrgId: string;
-	name: string;
+  clerkOrgId: string;
+  name: string;
 };

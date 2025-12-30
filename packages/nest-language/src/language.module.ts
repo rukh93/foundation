@@ -8,12 +8,9 @@ import { LanguageService } from './language.service';
 
 @Global()
 @Module({
-	controllers: [LanguageController],
-	exports: [LanguageService],
-	imports: [
-		ConfigModule.forFeature(config),
-		RedisCacheModule.forFeature('language'),
-	],
-	providers: [LanguageService],
+  controllers: [LanguageController],
+  exports: [LanguageService],
+  imports: [ConfigModule.forFeature(config), RedisCacheModule.forFeature('language')],
+  providers: [LanguageService],
 })
 export class LanguageModule {}

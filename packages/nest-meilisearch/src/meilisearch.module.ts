@@ -8,22 +8,22 @@ import { MeiliSearchService } from './meilisearch.service';
 
 @Global()
 @Module({
-	imports: [ConfigModule.forFeature(config)],
+  imports: [ConfigModule.forFeature(config)],
 })
 export class MeiliSearchModule {
-	static forRoot(): DynamicModule {
-		return {
-			module: MeiliSearchModule,
-			providers: [
-				{
-					provide: MEILISEARCH_CLIENT,
-					useFactory: (configService: ConfigService<MeiliSearchConfig, true>) =>
-						new MeiliSearch(configService.get<Config>('meilisearch')),
-					inject: [ConfigService],
-				},
-				MeiliSearchService,
-			],
-			exports: [MeiliSearchService],
-		};
-	}
+  static forRoot(): DynamicModule {
+    return {
+      module: MeiliSearchModule,
+      providers: [
+        {
+          provide: MEILISEARCH_CLIENT,
+          useFactory: (configService: ConfigService<MeiliSearchConfig, true>) =>
+            new MeiliSearch(configService.get<Config>('meilisearch')),
+          inject: [ConfigService],
+        },
+        MeiliSearchService,
+      ],
+      exports: [MeiliSearchService],
+    };
+  }
 }

@@ -1,26 +1,26 @@
-import { Controller, Get, HttpStatus,UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import type { FastifyUser } from '@repo/nest-clerk';
 import { ClerkAuthGuard, CurrentUser } from '@repo/nest-clerk';
 import { UserData } from '@repo/nest-prisma';
-import { HttpService,MessageAction, MessageEntity } from '@repo/nest-shared';
+import { HttpService, IRequestResponse, MessageAction, MessageEntity } from '@repo/nest-shared';
 
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-	constructor(
+  constructor(
     private readonly httpService: HttpService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   @UseGuards(ClerkAuthGuard)
-	@Get('me')
-	async me(@CurrentUser() user: FastifyUser) {
+  @Get('me')
+  async me(@CurrentUser() user: FastifyUser): Promise<IRequestResponse<UserData>> {
     return this.httpService.createResponse<UserData>(
       HttpStatus.OK,
       MessageAction.FIND_UNIQUE,
       MessageEntity.USER,
-      await this.userService.me(user)
+      await this.userService.me(user),
     );
-	}
+  }
 }

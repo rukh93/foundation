@@ -8,9 +8,11 @@ export default async function Page() {
 
   console.log(user);
 
-	const t = await getTranslations('OverviewPage');
+  const t = await getTranslations('OverviewPage');
 
-	return (
-		<PageWrapper title={t('title')} subtitle={t('subtitle')}>Overview</PageWrapper>
-	);
+  return (
+    <PageWrapper title={t('title')} subtitle={t('subtitle')}>
+      Overview
+    </PageWrapper>
+  );
 }

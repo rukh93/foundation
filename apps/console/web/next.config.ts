@@ -6,15 +6,10 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  transpilePackages: [
-    'lucide-react',
-    '@repo/ui'
-  ],
+  transpilePackages: ['lucide-react', '@repo/ui'],
   experimental: {
     authInterrupts: true,
   },
 };
 
-export default withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })(
-  withNextIntl(nextConfig)
-);
+export default withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })(withNextIntl(nextConfig));

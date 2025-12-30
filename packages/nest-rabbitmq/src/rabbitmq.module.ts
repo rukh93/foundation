@@ -6,14 +6,14 @@ import config from './rabbitmq.config';
 
 @Global()
 @Module({
-	imports: [
-		ConfigModule.forFeature(config),
-		RabbitMQModule.forRootAsync({
-			inject: [ConfigService],
-			useFactory: (configService: ConfigService<{ rabbitmq: RabbitMQConfig }, true>) =>
-				configService.get<RabbitMQConfig>('rabbitmq'),
-		}),
-	],
-	exports: [RabbitMQModule],
+  imports: [
+    ConfigModule.forFeature(config),
+    RabbitMQModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<{ rabbitmq: RabbitMQConfig }, true>) =>
+        configService.get<RabbitMQConfig>('rabbitmq'),
+    }),
+  ],
+  exports: [RabbitMQModule],
 })
 export class RabbitmqModule {}

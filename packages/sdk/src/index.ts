@@ -6,11 +6,11 @@ import { UserResource } from './resources/user';
 import type { SdkClientOptions } from './types';
 
 export class RepoSDK {
-	readonly user: UserResource;
+  readonly user: UserResource;
 
-	constructor(opts: SdkClientOptions) {
-		const client = new SdkClient(opts);
+  constructor(opts: SdkClientOptions) {
+    const client = new SdkClient(opts);
 
-		this.user = new UserResource(client);
-	}
+    this.user = new UserResource(client);
+  }
 }

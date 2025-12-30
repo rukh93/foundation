@@ -1,13 +1,13 @@
 import type { DocumentsQuery as MeiliSearchDocumentsQuery, SearchParams as MeiliSearchSearchParams } from 'meilisearch';
 
 export interface SearchParams extends MeiliSearchSearchParams {
-	page?: number;
+  page?: number;
 }
 
 export interface DocumentsQuery<T> extends MeiliSearchDocumentsQuery<T> {
-	page?: number;
+  page?: number;
 }
 
 export interface SearchParamFilter {
-	[key: string]: string[];
+  [key: string]: string[];
 }

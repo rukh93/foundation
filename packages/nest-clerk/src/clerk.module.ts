@@ -8,15 +8,15 @@ import { ClerkService } from './clerk.service';
 
 @Global()
 @Module({
-	controllers: [ClerkController],
-	providers: [
-		{
-			provide: CLERK_CLIENT,
-			useValue: clerkClient,
-		},
-		ClerkService,
-	],
-	imports: [ClerkRoleMapperModule],
-	exports: [CLERK_CLIENT, ClerkService],
+  controllers: [ClerkController],
+  providers: [
+    {
+      provide: CLERK_CLIENT,
+      useValue: clerkClient,
+    },
+    ClerkService,
+  ],
+  imports: [ClerkRoleMapperModule],
+  exports: [CLERK_CLIENT, ClerkService],
 })
 export class ClerkModule {}

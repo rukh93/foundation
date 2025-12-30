@@ -4,7 +4,7 @@ import { ErrorManagerService, HttpService } from './services';
 
 @Global()
 @Module({
-	exports: [ErrorManagerService, HttpService],
-	providers: [ErrorManagerService, HttpService],
+  exports: [ErrorManagerService, HttpService],
+  providers: [ErrorManagerService, HttpService],
 })
 export class SharedModule {}

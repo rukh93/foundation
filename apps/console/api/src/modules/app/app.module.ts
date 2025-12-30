@@ -12,18 +12,18 @@ import { SharedModule } from '@repo/nest-shared';
 import { UserModule } from '@repo/nest-user';
 
 @Module({
-	imports: [
-		ConfigModule.forRoot({ isGlobal: true }),
-		EventEmitterModule.forRoot(),
-		RedisCacheModule.forRoot(),
-		RabbitmqModule,
-		SharedModule,
-		PrismaModule,
-		LanguageModule,
-		ClerkModule,
-		UserModule,
-		OrganizationModule,
-		OrganizationMembershipModule,
-	],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    EventEmitterModule.forRoot(),
+    RedisCacheModule.forRoot(),
+    RabbitmqModule,
+    SharedModule,
+    PrismaModule,
+    LanguageModule,
+    ClerkModule,
+    UserModule,
+    OrganizationModule,
+    OrganizationMembershipModule,
+  ],
 })
 export class AppModule {}

@@ -5,8 +5,8 @@ import { OrganizationMembershipConsumer } from './organization-membership.consum
 import { OrganizationMembershipService } from './organization-membership.service';
 
 @Module({
-	imports: [ClerkRoleMapperModule],
-	exports: [OrganizationMembershipService],
-	providers: [OrganizationMembershipService, OrganizationMembershipConsumer],
+  imports: [ClerkRoleMapperModule],
+  exports: [OrganizationMembershipService],
+  providers: [OrganizationMembershipService, OrganizationMembershipConsumer],
 })
 export class OrganizationMembershipModule {}
