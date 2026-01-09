@@ -5,6 +5,7 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "incremental": true,
+    "isolatedModules": true,
     "lib": ["es2022"],
     "module": "NodeNext",
     "moduleDetection": "force",

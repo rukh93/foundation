@@ -1,0 +1,59 @@
+name: Deploy console-api to Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Git tag to deploy (must exist, e.g. v1.2.3)"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      REGION: us-east4
+      REPO: stactiq-containers
+      SERVICE: nest-console-api
+      DOCKERFILE: infra/prod/console/Dockerfile
+
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Auth to Google (WIF)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker auth
+        run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+
+      - name: Build & Push image
+        run: |
+          PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          TAG="${{ inputs.tag }}"
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$SERVICE:$TAG"
+
+          docker build -f "$DOCKERFILE" -t "$IMAGE" .
+          docker push "$IMAGE"
+
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "$SERVICE" \
+            --region "$REGION" \
+            --image "$IMAGE" \
+            --port 8080 \
+            --quiet

@@ -16,6 +16,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "strictBindCallApply": false
+    "strictBindCallApply": false,
+    "emitDeclarationOnly": false,
+    "isolatedModules": false
   }
 }
