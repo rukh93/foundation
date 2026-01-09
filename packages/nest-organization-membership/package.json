@@ -23,13 +23,15 @@
   },
   "dependencies": {
     "@clerk/fastify": "^2.6.12",
-    "@golevelup/nestjs-rabbitmq": "^7.1.1",
+    "@repo/nest-clerk": "workspace:*",
     "@repo/nest-clerk-role-mapper": "workspace:*",
     "@repo/nest-language": "workspace:*",
     "@repo/nest-organization": "workspace:*",
     "@repo/nest-prisma": "workspace:*",
+    "@repo/nest-pubsub": "workspace:*",
     "@repo/nest-shared": "workspace:*",
     "@repo/nest-user": "workspace:*",
+    "@repo/nest-webhook-event": "workspace:*",
     "@repo/prisma": "workspace:*"
   },
   "peerDependencies": {

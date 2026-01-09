@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import {
-  OrganizationMembershipRole,
-  type OrganizationMembershipRole as OrganizationMembershipRoleType,
-} from '@repo/prisma';
+import { $Enums, type $Enums as $EnumsType } from '@repo/prisma';
 
 @Injectable()
 export class ClerkRoleMapperService {
-  mapRole(role: string): OrganizationMembershipRoleType {
+  mapRole(role: string): $EnumsType.OrganizationMembershipRole {
     switch (role) {
       case 'org:admin':
-        return OrganizationMembershipRole.Admin;
+        return $Enums.OrganizationMembershipRole.Admin;
       case 'org:member':
       default:
-        return OrganizationMembershipRole.Member;
+        return $Enums.OrganizationMembershipRole.Member;
     }
   }
 }

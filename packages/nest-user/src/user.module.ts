@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { LanguageModule } from '@repo/nest-language';
+import { WebhookEventModule } from '@repo/nest-webhook-event';
 
-import { UserConsumer } from './user.consumer';
+import { UserHandler } from './pubsub/user.handler';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 @Module({
-  imports: [LanguageModule],
+  imports: [LanguageModule, WebhookEventModule],
   controllers: [UserController],
   exports: [UserService],
-  providers: [UserService, UserConsumer],
+  providers: [UserService, UserHandler],
 })
 export class UserModule {}

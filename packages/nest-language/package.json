@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@repo/nest-prisma": "workspace:*",
-    "@repo/nest-redis-cache": "workspace:*",
     "@repo/nest-shared": "workspace:*",
     "@repo/prisma": "workspace:*"
   },

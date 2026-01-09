@@ -23,10 +23,11 @@
   },
   "dependencies": {
     "@clerk/fastify": "^2.6.12",
-    "@golevelup/nestjs-rabbitmq": "^7.1.1",
     "@repo/nest-clerk-role-mapper": "workspace:*",
     "@repo/nest-prisma": "workspace:*",
+    "@repo/nest-pubsub": "workspace:*",
     "@repo/nest-shared": "workspace:*",
+    "@repo/nest-webhook-event": "workspace:*",
     "@repo/prisma": "workspace:*",
     "fastify": "^5.6.2"
   },

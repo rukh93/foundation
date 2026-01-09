@@ -33,4 +33,5 @@ export const MessageEntity = {
   REDIS_CACHE: 'REDIS_CACHE',
   SHARED: 'SHARED',
   USER: 'USER',
+  WEBHOOK_EVENT: 'WEBHOOK_EVENT',
 } as const;

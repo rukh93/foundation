@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
+import { WebhookEventModule } from '@repo/nest-webhook-event';
 
-import { OrganizationConsumer } from './organization.consumer';
-import { OrganizationService } from './organization.service';
+import { OrganizationHandler } from './pubsub/organization.handler';
 
 @Module({
-  exports: [OrganizationService],
-  providers: [OrganizationService, OrganizationConsumer],
+  imports: [WebhookEventModule],
+  providers: [OrganizationHandler],
 })
 export class OrganizationModule {}

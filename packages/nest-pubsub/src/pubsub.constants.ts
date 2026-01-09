@@ -1,0 +1,1 @@
+export const PUBSUB_HANDLER_KIND = Symbol('PUBSUB_HANDLER_KIND');

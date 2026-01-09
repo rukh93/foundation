@@ -1,5 +1,5 @@
 {
-  "name": "@repo/nest-rabbitmq",
+  "name": "@repo/nest-webhook-event",
   "private": true,
   "sideEffects": false,
   "version": "0.0.0",
@@ -22,15 +22,15 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@golevelup/nestjs-rabbitmq": "^7.1.1"
+    "@repo/nest-prisma": "workspace:*",
+    "@repo/nest-shared": "workspace:*",
+    "@repo/prisma": "workspace:*"
   },
   "peerDependencies": {
-    "@nestjs/common": "^11.1.9",
-    "@nestjs/config": "^4.0.2"
+    "@nestjs/common": "^11.1.9"
   },
   "devDependencies": {
     "@nestjs/common": "^11.1.10",
-    "@nestjs/config": "^4.0.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^24.10.4",

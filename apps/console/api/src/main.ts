@@ -54,7 +54,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(Number(process.env.PORT) || 8080, '0.0.0.0');
 }
 
 // eslint-disable-next-line

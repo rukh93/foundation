@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/types": "workspace:*",
     "@types/node": "^24.10.4",
     "eslint": "^9.39.2",
     "rimraf": "^6.1.2"

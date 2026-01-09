@@ -1,4 +1,4 @@
-import type { UserStatus } from '@repo/prisma';
+import type { $Enums } from '@repo/prisma';
 
 export type UpsertUserInput = {
   clerkUserId: string;
@@ -6,5 +6,5 @@ export type UpsertUserInput = {
   phone?: string;
   firstName?: string | null;
   lastName?: string | null;
-  status?: UserStatus;
+  status?: $Enums.UserStatus;
 };

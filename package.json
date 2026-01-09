@@ -9,7 +9,7 @@
     "build": "turbo run build",
     "clean": "pnpm -r --parallel run clean",
     "start:console": "turbo run start --filter=./apps/console/**",
-    "dev:console": "turbo run dev --filter=./apps/console/**",
+    "dev:console": "turbo run dev --filter=./apps/console/** --filter=./packages/** --concurrency=22",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
@@ -46,7 +46,7 @@
     "typescript": "5.9.3",
     "typescript-eslint": "^8.50.1"
   },
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.27.0",
   "engines": {
     "node": ">=24"
   }

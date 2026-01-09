@@ -9,3 +9,13 @@ export type FastifyUser = {
 };
 
 export type FastifyRequestWithUser<U = FastifyUser> = FastifyRequest & { user: U };
+
+export type WebhookBody = {
+  instance_id: string;
+  timestamp: number;
+};
+
+export type WebhookMessage = {
+  kind: string;
+  eventId: string;
+};

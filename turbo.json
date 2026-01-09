@@ -26,7 +26,12 @@
         "RABBITMQ_DEFAULT_USER",
         "RABBITMQ_DEFAULT_PASS",
         "REDIS_USERNAME",
-        "REDIS_PASSWORD"
+        "REDIS_PASSWORD",
+        "PORT",
+        "PUBSUB_TOPIC_NAME_WEBHOOKS",
+        "PUBSUB_PUSH_AUDIENCE",
+        "PUBSUB_PUSH_SA_EMAIL",
+        "GCP_PROJECT_ID"
       ]
     },
     "start": {
@@ -41,7 +46,12 @@
         "RABBITMQ_DEFAULT_USER",
         "RABBITMQ_DEFAULT_PASS",
         "REDIS_USERNAME",
-        "REDIS_PASSWORD"
+        "REDIS_PASSWORD",
+        "PORT",
+        "PUBSUB_TOPIC_NAME_WEBHOOKS",
+        "PUBSUB_PUSH_AUDIENCE",
+        "PUBSUB_PUSH_SA_EMAIL",
+        "GCP_PROJECT_ID"
       ]
     },
     "prisma:deploy": {
