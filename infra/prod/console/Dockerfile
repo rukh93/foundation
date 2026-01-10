@@ -46,7 +46,9 @@ RUN find /app/apps /app/packages -name "*.tsbuildinfo" -delete 2>/dev/null || tr
 RUN find /app/apps /app/packages -type d -name "dist" -prune -exec rm -rf {} + 2>/dev/null || true
 
 # Run sequentially to avoid prisma generate/build races
-RUN pnpm turbo run prisma:generate --filter=@repo/console-api...
+RUN DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public" \
+    pnpm turbo run prisma:generate --filter=@repo/console-api...
+
 RUN pnpm turbo run build --filter=@repo/console-api...
 
 # ---------- runner ----------

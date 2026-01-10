@@ -2,10 +2,9 @@ name: Deploy console-api to Cloud Run
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Git tag to deploy (must exist, e.g. v1.2.3)"
-        required: true
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   deploy:
