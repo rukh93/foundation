@@ -45,10 +45,10 @@ COPY --from=pruner /repo/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN find /app/apps /app/packages -name "*.tsbuildinfo" -delete 2>/dev/null || true
 RUN find /app/apps /app/packages -type d -name "dist" -prune -exec rm -rf {} + 2>/dev/null || true
 
-# Run sequentially to avoid prisma generate/build races
-RUN DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public" \
-    pnpm turbo run prisma:generate --filter=@repo/console-api...
+# Ensure DATABASE_URL exists for any prisma:generate task in any package
+ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public"
 
+RUN pnpm turbo run prisma:generate --filter=@repo/console-api...
 RUN pnpm turbo run build --filter=@repo/console-api...
 
 # ---------- runner ----------
