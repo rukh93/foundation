@@ -40,15 +40,26 @@ jobs:
 
       - name: Build & Push image
         run: |
+          set -euo pipefail
+
           PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+
+          # Read input tag, strip whitespace, strip optional refs/tags/ prefix
           TAG="${{ inputs.tag }}"
+          TAG="$(echo "$TAG" | tr -d '[:space:]')"
+          TAG="${TAG#refs/tags/}"
+
+          if [ -z "$TAG" ]; then
+            echo "ERROR: inputs.tag is empty. Provide a tag like v1.2.3"
+            exit 1
+          fi
+
           IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$SERVICE:$TAG"
 
+          echo "Using IMAGE=$IMAGE"
           docker build -f "$DOCKERFILE" -t "$IMAGE" .
           docker push "$IMAGE"
-
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
-
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy "$SERVICE" \
