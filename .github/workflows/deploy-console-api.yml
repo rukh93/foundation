@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
+          fetch-depth: 0
 
       - name: Auth to Google (WIF)
         uses: google-github-actions/auth@v2
@@ -40,8 +41,9 @@ jobs:
 
       - name: Build & Push image
         run: |
+          set -euo pipefail
           PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
-          TAG="${{ github.ref }}"
+          TAG="${{ github.ref_name }}"
           IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO/$SERVICE:$TAG"
 
           docker build -f "$DOCKERFILE" -t "$IMAGE" .
