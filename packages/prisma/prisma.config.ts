@@ -1,7 +1,15 @@
-import 'dotenv/config';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
+import dotenv from 'dotenv';
 import type { PrismaConfig } from 'prisma';
-import { defineConfig, env } from 'prisma/config';
+import { defineConfig } from 'prisma/config';
+
+const rootEnvPath = resolve(__dirname, '../../.env');
+
+if (existsSync(rootEnvPath)) {
+  dotenv.config({ path: rootEnvPath });
+}
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
