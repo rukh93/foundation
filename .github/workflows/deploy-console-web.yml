@@ -1,54 +1,29 @@
 name: Deploy Console Web to Vercel
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.CONSOLE_VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.CONSOLE_VERCEL_PROJECT_ID }}
+
 on:
   workflow_dispatch:
   push:
     tags:
       - 'cw-v*.*.*'
 
-concurrency:
-  group: vercel-console-web-prod
-  cancel-in-progress: true
-
 jobs:
-  deploy:
+  Deploy-Production:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.CONSOLE_VERCEL_TOKEN }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.CONSOLE_VERCEL_TOKEN }}
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Optional: build first (good if you want to fail early before deploying)
-      # If you use turborepo, keep this. If not, remove.
-      - name: Build (optional but recommended)
-        run: pnpm turbo run build --filter=@repo/console-web...
-
-      - name: Deploy to Vercel (Production)
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          pnpm dlx vercel pull --yes --environment=production \
-            --token "$VERCEL_TOKEN" \
-            --scope "$VERCEL_ORG_ID" \
-            --cwd apps/console/web
-
-          pnpm dlx vercel deploy --prod \
-            --token "$VERCEL_TOKEN" \
-            --scope "$VERCEL_ORG_ID" \
-            --cwd apps/console/web
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.CONSOLE_VERCEL_TOKEN }}
