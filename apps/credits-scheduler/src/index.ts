@@ -10,9 +10,7 @@ const prisma = createPrismaClient(process.env.DATABASE_URL!);
 
 async function main() {
   const topicName = process.env.PUBSUB_TOPIC_NAME_SUB_GRANTS!;
-  const raw = process.env.CREDITS_SCHEDULER_BATCH_SIZE;
-  const n = Number(raw);
-  const batchSize = Number.isFinite(n) && n > 0 ? Math.floor(n) : 500;
+  const batchSize = Number(process.env.CREDITS_SCHEDULER_BATCH_SIZE ?? 500);
   const dryRun = process.env.CREDITS_SCHEDULER_DRY_RUN === 'true';
 
   const nowUtc = new Date();
