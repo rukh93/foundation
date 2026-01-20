@@ -1,3 +1,4 @@
+export * from './date';
 export * from './services';
 export * from './shared.constants';
 export type * from './shared.interfaces';

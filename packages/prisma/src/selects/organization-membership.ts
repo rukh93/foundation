@@ -1,4 +1,4 @@
-import { Prisma } from '@repo/prisma';
+import { Prisma } from '../../src';
 
 export const organizationMembershipIdSelect: Prisma.OrganizationMembershipSelect = {
   id: true,

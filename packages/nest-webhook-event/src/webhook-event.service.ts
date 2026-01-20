@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService, WebhookEventData, webhookEventDataSelect } from '@repo/nest-prisma';
-import { $Enums, type $Enums as $EnumsType, Prisma } from '@repo/prisma';
+import { PrismaService } from '@repo/nest-prisma';
+import { $Enums, type $Enums as $EnumsType, Prisma, WebhookEventData, webhookEventDataSelect } from '@repo/prisma';
 
 @Injectable()
 export class WebhookEventService {

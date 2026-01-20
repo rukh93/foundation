@@ -15,6 +15,8 @@ export class PubSubPushAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    if (this.config.emulator.enabled) return true;
+
     const req = ctx.switchToHttp().getRequest<FastifyRequest>();
 
     if (!this.config.pushAudience || !this.config.pushServiceAccountEmail) {

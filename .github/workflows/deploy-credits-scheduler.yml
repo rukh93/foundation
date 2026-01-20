@@ -1,10 +1,10 @@
-name: Deploy Console API to Cloud Run
+name: Deploy Credits Scheduler to Cloud Run
 
 on:
   workflow_dispatch:
   push:
     tags:
-      - 'ca-v*.*.*'
+      - 'cs-v*.*.*'
 
 jobs:
   deploy:

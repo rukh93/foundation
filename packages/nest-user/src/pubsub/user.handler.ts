@@ -1,10 +1,10 @@
 import type { UserWebhookEvent } from '@clerk/fastify';
 import { Injectable } from '@nestjs/common';
 import type { WebhookMessage } from '@repo/nest-clerk';
-import { PrismaService, userIdSelect, WebhookEventData } from '@repo/nest-prisma';
+import { PrismaService } from '@repo/nest-prisma';
 import { IPubSubHandler, PubSubHandler } from '@repo/nest-pubsub';
 import { WebhookEventService } from '@repo/nest-webhook-event';
-import { $Enums, type $Enums as $EnumsType, Prisma } from '@repo/prisma';
+import { $Enums, type $Enums as $EnumsType, Prisma, userIdSelect, WebhookEventData } from '@repo/prisma';
 
 import type { UpsertUserInput } from '../user.types';
 

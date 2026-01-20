@@ -1,5 +1,4 @@
-import { Prisma } from '@repo/prisma';
-
+import { Prisma } from '../../src';
 import { languageDataSelect } from './language';
 
 export const userIdSelect: Prisma.UserSelect = {

@@ -1,4 +1,4 @@
-import { Prisma } from '@repo/prisma';
+import { Prisma } from '../../src';
 
 export const webhookEventDataSelect: Prisma.WebhookEventSelect = {
   id: true,

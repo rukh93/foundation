@@ -1,5 +1,4 @@
-import { Prisma } from '@repo/prisma';
-
+import { Prisma } from '../../src';
 import { organizationMembershipIdSelect } from '../selects';
 
 export type OrganizationMembershipId = Prisma.OrganizationMembershipGetPayload<{

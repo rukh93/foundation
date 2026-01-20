@@ -20,6 +20,8 @@
       "persistent": true,
       "env": [
         "API_URL",
+        "CREDITS_SCHEDULER_BATCH_SIZE",
+        "CREDITS_SCHEDULER_DRY_RUN",
         "DATABASE_URL",
         "OPENAI_API_KEY",
         "MEILISEARCH_MASTER_KEY",
@@ -28,7 +30,9 @@
         "REDIS_USERNAME",
         "REDIS_PASSWORD",
         "PORT",
+        "PUBSUB_EMULATOR_ENABLED",
         "PUBSUB_TOPIC_NAME_WEBHOOKS",
+        "PUBSUB_TOPIC_NAME_SUB_GRANTS",
         "PUBSUB_PUSH_AUDIENCE",
         "PUBSUB_PUSH_SA_EMAIL",
         "GCP_PROJECT_ID"
@@ -40,6 +44,8 @@
       "persistent": true,
       "env": [
         "API_URL",
+        "CREDITS_SCHEDULER_BATCH_SIZE",
+        "CREDITS_SCHEDULER_DRY_RUN",
         "DATABASE_URL",
         "OPENAI_API_KEY",
         "MEILISEARCH_MASTER_KEY",
@@ -48,7 +54,9 @@
         "REDIS_USERNAME",
         "REDIS_PASSWORD",
         "PORT",
+        "PUBSUB_EMULATOR_ENABLED",
         "PUBSUB_TOPIC_NAME_WEBHOOKS",
+        "PUBSUB_TOPIC_NAME_SUB_GRANTS",
         "PUBSUB_PUSH_AUDIENCE",
         "PUBSUB_PUSH_SA_EMAIL",
         "GCP_PROJECT_ID"
@@ -70,6 +78,9 @@
       "cache": false
     },
     "prisma:studio": {
+      "cache": false
+    },
+    "prisma:seed": {
       "cache": false
     },
     "prisma:test": {

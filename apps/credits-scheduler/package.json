@@ -1,0 +1,24 @@
+{
+  "name": "@repo/credits-scheduler",
+  "private": true,
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node -r dotenv/config src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^5.2.0",
+    "@repo/nest-prisma": "workspace:*",
+    "@repo/prisma": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^24.10.4",
+    "eslint": "^9.39.2",
+    "rimraf": "^6.1.2",
+    "ts-node": "^10.9.2"
+  }
+}

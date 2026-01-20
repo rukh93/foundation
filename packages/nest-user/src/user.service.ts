@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import type { FastifyUser } from '@repo/nest-clerk';
-import { PrismaService, type UserData, userDataSelect } from '@repo/nest-prisma';
+import { PrismaService } from '@repo/nest-prisma';
 import { ErrorManagerService, MessageAction, MessageEntity } from '@repo/nest-shared';
+import { type UserData, userDataSelect } from '@repo/prisma';
 
 @Injectable()
 export class UserService {

@@ -1,5 +1,6 @@
 export * from './language';
 export * from './organization';
+export * from './organization-credit-schedule';
 export * from './organization-membership';
 export * from './organization-subscription';
 export * from './user';

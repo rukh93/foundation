@@ -58,7 +58,10 @@ model Organization {
 
   memberships OrganizationMembership[]
 
-  subscription OrganizationSubscription? @relation("OrgSubscription")
+  subscription        OrganizationSubscription?   @relation("OrgSubscription")
+  creditBalance       OrganizationCreditBalance?  @relation("OrgCreditBalance")
+  creditSchedule      OrganizationCreditSchedule? @relation("OrgCreditSchedule")
+  creditLedgerEntries CreditLedgerEntry[]
 }
 
 model OrganizationSubscription {
@@ -80,12 +83,71 @@ model OrganizationSubscription {
   currentPeriodEnd   DateTime?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([currentPlanSlug])
   @@index([currentStatus])
   @@index([externalUpdatedAt])
   @@index([provider])
+}
+
+model OrganizationCreditBalance {
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @unique @db.Uuid
+
+  organization Organization @relation("OrgCreditBalance", fields: [organizationId], references: [id], onDelete: Cascade)
+
+  dailyCredits        Int @default(0)
+  subscriptionCredits Int @default(0)
+  purchasedCredits    Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([organizationId])
+}
+
+model OrganizationCreditSchedule {
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @unique @db.Uuid
+
+  organization Organization @relation("OrgCreditSchedule", fields: [organizationId], references: [id], onDelete: Cascade)
+
+  subscriptionAnchorAt    DateTime
+  nextSubscriptionGrantAt DateTime
+  lastSubscriptionGrantAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([nextSubscriptionGrantAt])
+}
+
+model CreditLedgerEntry {
+  id             String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  bucket CreditBucket
+  delta  Int
+
+  reason CreditLedgerReason
+
+  idempotencyKey String
+
+  featureKey    String?
+  jobId         String? @db.Uuid
+  planVersionId String? @db.Uuid
+  actorUserId   String? @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, createdAt])
+  @@index([organizationId, bucket])
+  @@index([jobId])
 }
 
 model WebhookEvent {
@@ -105,11 +167,48 @@ model WebhookEvent {
   payload Json
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([provider, externalEventId])
   @@index([provider, occurredAt])
   @@index([status])
+}
+
+model Plan {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String   @unique
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  versions PlanVersion[]
+}
+
+model PlanVersion {
+  id     String @id @default(uuid()) @db.Uuid
+  planId String @db.Uuid
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  effectiveFrom DateTime
+  effectiveTo   DateTime?
+
+  isActive Boolean @default(true)
+
+  monthlyCredits Int @default(0)
+
+  dailyEnabled           Boolean @default(false)
+  dailyGrantCredits      Int     @default(0)
+  dailyMonthlyCapCredits Int     @default(0)
+
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([planId, effectiveFrom])
+  @@index([planId, effectiveFrom])
+  @@index([effectiveFrom])
 }
 
 enum OrganizationMembershipRole {
@@ -155,4 +254,20 @@ enum BillingInterval {
   Monthly
   Quarterly
   Annual
+}
+
+enum CreditBucket {
+  Daily
+  Subscription
+  Purchased
+}
+
+enum CreditLedgerReason {
+  DailyGrant
+  SubscriptionGrant
+  CreditPackPurchase
+  CreditPackRefund
+  JobBurn
+  ManualAdjustment
+  PlanUpgradeAdjustment
 }

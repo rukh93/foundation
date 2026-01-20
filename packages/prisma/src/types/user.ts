@@ -1,5 +1,4 @@
-import { Prisma } from '@repo/prisma';
-
+import { Prisma } from '../../src';
 import { userDataSelect, userIdSelect } from '../selects';
 
 export type UserId = Prisma.UserGetPayload<{

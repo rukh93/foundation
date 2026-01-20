@@ -1,18 +1,49 @@
 import { PubSub } from '@google-cloud/pubsub';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 import pubSubConfig from './pubsub.config';
 
 @Injectable()
-export class PubSubPublisher {
+export class PubSubPublisher implements OnModuleInit {
   private readonly pubsub: PubSub;
 
   constructor(
     @Inject(pubSubConfig.KEY)
     private readonly config: ConfigType<typeof pubSubConfig>,
   ) {
-    this.pubsub = new PubSub({ projectId: this.config.projectId });
+    this.pubsub = new PubSub({
+      projectId: this.config.projectId,
+      ...(config.emulator.enabled ? { apiEndpoint: config.emulator.apiEndpoint } : {}),
+    });
+  }
+
+  async onModuleInit() {
+    if (this.config.emulator.enabled) {
+      await this.setupMultipleTopics();
+    }
+  }
+
+  async setupMultipleTopics() {
+    for (const config of this.config.emulator.topics) {
+      const [topic] = await this.pubsub.topic(config.name).get({
+        autoCreate: true,
+      });
+
+      for (const sub of config.subscriptions) {
+        const subscription = topic.subscription(sub);
+
+        const [exists] = await subscription.exists();
+
+        if (!exists) {
+          await topic.createSubscription(sub, {
+            pushConfig: {
+              pushEndpoint: this.config.emulator.pushEndpoint,
+            },
+          });
+        }
+      }
+    }
   }
 
   async publish<T = object>(topic: string, message: T, attributes?: Record<string, string>) {

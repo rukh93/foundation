@@ -1,8 +1,8 @@
 import { Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import type { FastifyUser } from '@repo/nest-clerk';
 import { ClerkAuthGuard, CurrentUser } from '@repo/nest-clerk';
-import { UserData } from '@repo/nest-prisma';
 import { HttpService, IRequestResponse, MessageAction, MessageEntity } from '@repo/nest-shared';
+import type { UserData } from '@repo/prisma';
 
 import { UserService } from './user.service';
 

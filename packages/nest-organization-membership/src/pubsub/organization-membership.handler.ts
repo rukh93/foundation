@@ -2,18 +2,19 @@ import type { OrganizationMembershipWebhookEvent } from '@clerk/fastify';
 import { Injectable } from '@nestjs/common';
 import type { WebhookMessage } from '@repo/nest-clerk';
 import { ClerkRoleMapperService } from '@repo/nest-clerk-role-mapper';
+import { PrismaService } from '@repo/nest-prisma';
+import { PubSubHandler } from '@repo/nest-pubsub';
+import { WebhookEventService } from '@repo/nest-webhook-event';
 import {
+  $Enums,
   type OrganizationId,
   organizationIdSelect,
   organizationMembershipIdSelect,
-  PrismaService,
+  Prisma,
   type UserId,
   userIdSelect,
   WebhookEventData,
-} from '@repo/nest-prisma';
-import { PubSubHandler } from '@repo/nest-pubsub';
-import { WebhookEventService } from '@repo/nest-webhook-event';
-import { $Enums, Prisma } from '@repo/prisma';
+} from '@repo/prisma';
 
 @PubSubHandler('WEBHOOK_ORGANIZATIONMEMBERSHIP')
 @Injectable()

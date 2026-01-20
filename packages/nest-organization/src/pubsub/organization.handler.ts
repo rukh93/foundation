@@ -1,10 +1,10 @@
 import type { OrganizationWebhookEvent } from '@clerk/fastify';
 import { Injectable } from '@nestjs/common';
 import type { WebhookMessage } from '@repo/nest-clerk';
-import { organizationIdSelect, PrismaService, WebhookEventData } from '@repo/nest-prisma';
+import { PrismaService } from '@repo/nest-prisma';
 import { PubSubHandler } from '@repo/nest-pubsub';
 import { WebhookEventService } from '@repo/nest-webhook-event';
-import { $Enums, Prisma } from '@repo/prisma';
+import { $Enums, organizationIdSelect, Prisma, WebhookEventData } from '@repo/prisma';
 
 @PubSubHandler('WEBHOOK_ORGANIZATION')
 @Injectable()

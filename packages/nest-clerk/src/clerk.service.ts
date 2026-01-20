@@ -1,18 +1,20 @@
 import type { ClerkClient, WebhookEvent } from '@clerk/fastify';
 import { ForbiddenException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ClerkRoleMapperService } from '@repo/nest-clerk-role-mapper';
+import { PrismaService } from '@repo/nest-prisma';
+import { PubSubPublisher } from '@repo/nest-pubsub';
+import { WebhookEventService } from '@repo/nest-webhook-event';
 import {
+  $Enums,
+  type $Enums as $EnumsType,
   type OrganizationId,
   organizationIdSelect,
   type OrganizationMembershipId,
   organizationMembershipIdSelect,
-  PrismaService,
+  Prisma,
   type UserId,
   userIdSelect,
-} from '@repo/nest-prisma';
-import { PubSubPublisher } from '@repo/nest-pubsub';
-import { WebhookEventService } from '@repo/nest-webhook-event';
-import { $Enums, type $Enums as $EnumsType, Prisma } from '@repo/prisma';
+} from '@repo/prisma';
 
 import { CLERK_CLIENT, ErrorCodes } from './clerk.constants';
 import type { FastifyUser, WebhookMessage } from './clerk.types';

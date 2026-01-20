@@ -267,6 +267,37 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
+  apps/credits-scheduler:
+    dependencies:
+      '@google-cloud/pubsub':
+        specifier: ^5.2.0
+        version: 5.2.1
+      '@repo/nest-prisma':
+        specifier: workspace:*
+        version: link:../../packages/nest-prisma
+      '@repo/prisma':
+        specifier: workspace:*
+        version: link:../../packages/prisma
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^24.10.4
+        version: 24.10.4
+      eslint:
+        specifier: ^9.39.2
+        version: 9.39.2(jiti@2.6.1)
+      rimraf:
+        specifier: ^6.1.2
+        version: 6.1.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.15.7)(@types/node@24.10.4)(typescript@5.9.3)
+
   packages/eslint-config: {}
 
   packages/nest-clerk:
@@ -360,6 +391,40 @@ importers:
 
   packages/nest-clerk-role-mapper:
     dependencies:
+      '@repo/prisma':
+        specifier: workspace:*
+        version: link:../prisma
+    devDependencies:
+      '@nestjs/common':
+        specifier: ^11.1.10
+        version: 11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^24.10.4
+        version: 24.10.4
+      eslint:
+        specifier: ^9.39.2
+        version: 9.39.2(jiti@2.6.1)
+      rimraf:
+        specifier: ^6.1.2
+        version: 6.1.2
+
+  packages/nest-credits:
+    dependencies:
+      '@repo/nest-prisma':
+        specifier: workspace:*
+        version: link:../nest-prisma
+      '@repo/nest-pubsub':
+        specifier: workspace:*
+        version: link:../nest-pubsub
+      '@repo/nest-shared':
+        specifier: workspace:*
+        version: link:../nest-shared
       '@repo/prisma':
         specifier: workspace:*
         version: link:../prisma
@@ -9548,7 +9613,7 @@ snapshots:
 
   dotenv-expand@12.0.1:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.6.1
 
   dotenv@16.0.3: {}
 

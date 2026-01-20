@@ -1,5 +1,4 @@
-import { Prisma } from '@repo/prisma';
-
+import { Prisma } from '../../src';
 import { webhookEventDataSelect } from '../selects';
 
 export type WebhookEventData = Prisma.WebhookEventGetPayload<{
