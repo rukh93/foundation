@@ -23,7 +23,7 @@ CREATE TYPE "BillingInterval" AS ENUM ('Monthly', 'Quarterly', 'Annual');
 CREATE TYPE "CreditBucket" AS ENUM ('Daily', 'Subscription', 'Purchased');
 
 -- CreateEnum
-CREATE TYPE "CreditLedgerReason" AS ENUM ('DailyGrant', 'SubscriptionGrant', 'CreditPackPurchase', 'CreditPackRefund', 'JobBurn', 'ManualAdjustment', 'PlanUpgradeAdjustment');
+CREATE TYPE "CreditLedgerReason" AS ENUM ('DailyGrant', 'SubscriptionGrant', 'CreditPackPurchase', 'CreditPackRefund', 'JobBurn', 'ManualAdjustment', 'PlanUpgradeAdjustment', 'PlanDowngradeClamp');
 
 -- CreateTable
 CREATE TABLE "Language" (

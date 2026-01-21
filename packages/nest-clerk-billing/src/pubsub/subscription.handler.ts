@@ -110,6 +110,8 @@ export class SubscriptionHandler {
         const oldStatus = existing?.currentStatus ?? null;
         const oldPlan = existing?.currentPlanSlug ?? null;
 
+        const planDowngradedToFree = !!oldPlan && oldPlan !== FREE_PLAN_CODE && currentPlanSlug === FREE_PLAN_CODE;
+
         await tx.organizationSubscription.upsert({
           where: { organizationId: organization.id },
           create: {
@@ -117,7 +119,7 @@ export class SubscriptionHandler {
             externalSubscriptionId: payload.data.id ?? null,
             externalSubscriptionItemId: currentItem?.id ?? null,
             externalSubscriptionStatus: currentItem?.status ?? null,
-            currentPlanSlug: currentPlanSlug,
+            currentPlanSlug,
             currentStatus: derivedStatus,
             currentPeriodStart: periodStartToDate,
             currentPeriodEnd: periodEndToDate,
@@ -135,12 +137,14 @@ export class SubscriptionHandler {
           },
         });
 
-        await this.ensureInitialSubscriptionCredits(tx, {
-          organizationId: organization.id,
-          derivedStatus,
-          planCode: currentPlanSlug,
-          anchorAt: periodStartToDate ?? nowUtc,
-        });
+        if (!planDowngradedToFree) {
+          await this.ensureInitialSubscriptionCredits(tx, {
+            organizationId: organization.id,
+            derivedStatus,
+            planCode: currentPlanSlug,
+            anchorAt: periodStartToDate ?? nowUtc,
+          });
+        }
 
         await this.applyUpgradeCreditAdjustmentIfNeeded(tx, {
           organizationId: organization.id,
@@ -150,12 +154,19 @@ export class SubscriptionHandler {
           newPlanCode: currentPlanSlug,
         });
 
+        await this.applyDowngradeClampToFreeIfNeeded(tx, {
+          organizationId: organization.id,
+          webhookEventId: webhook.id,
+          oldPlanCode: oldPlan,
+          newPlanCode: currentPlanSlug,
+        });
+
         const becameActive =
           oldStatus !== $Enums.SubscriptionStatus.Active && derivedStatus === $Enums.SubscriptionStatus.Active;
 
         const planChanged = !!oldPlan && !!currentPlanSlug && oldPlan !== currentPlanSlug;
 
-        if (becameActive || planChanged) {
+        if (!planDowngradedToFree && (becameActive || planChanged)) {
           await this.grantMonthlyCatchUpIfDue(tx, {
             organizationId: organization.id,
             nowUtc,
@@ -268,7 +279,7 @@ export class SubscriptionHandler {
           if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
             handled = true; // already granted
           } else {
-            throw error; // let Pub/Sub retry
+            throw error; // retry
           }
         }
       } else {
@@ -411,6 +422,101 @@ export class SubscriptionHandler {
     }
   }
 
+  private async applyDowngradeClampToFreeIfNeeded(
+    tx: Prisma.TransactionClient,
+    input: {
+      organizationId: string;
+      webhookEventId: string;
+      oldPlanCode: string | null;
+      newPlanCode: string;
+    },
+  ) {
+    const { organizationId, webhookEventId, oldPlanCode, newPlanCode } = input;
+
+    if (!oldPlanCode) return;
+
+    if (oldPlanCode === FREE_PLAN_CODE) return;
+
+    if (newPlanCode !== FREE_PLAN_CODE) return;
+
+    const schedule = await tx.organizationCreditSchedule.findUnique({
+      where: { organizationId },
+      select: {
+        subscriptionAnchorAt: true,
+        lastSubscriptionGrantAt: true,
+        nextSubscriptionGrantAt: true,
+      },
+    });
+
+    if (!schedule) return;
+
+    const cycleStart = schedule.lastSubscriptionGrantAt ?? schedule.subscriptionAnchorAt;
+    const cycleEnd = schedule.nextSubscriptionGrantAt;
+
+    if (cycleEnd.getTime() <= cycleStart.getTime()) return;
+
+    const freeAlloc = await this.resolveMonthlyCreditsForPlanAt(tx, FREE_PLAN_CODE, cycleStart);
+
+    const usedAgg = await tx.creditLedgerEntry.aggregate({
+      where: {
+        organizationId,
+        bucket: $Enums.CreditBucket.Subscription,
+        delta: { lt: 0 },
+        createdAt: { gte: cycleStart, lt: cycleEnd },
+        // reason: $Enums.CreditLedgerReason.JobBurn,
+      },
+      _sum: { delta: true },
+    });
+
+    const used = Math.abs(usedAgg._sum.delta ?? 0);
+    const targetRemaining = Math.max(0, freeAlloc - used);
+
+    await tx.organizationCreditBalance.upsert({
+      where: { organizationId },
+      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      update: {},
+    });
+
+    const balance = await tx.organizationCreditBalance.findUnique({
+      where: { organizationId },
+      select: { subscriptionCredits: true },
+    });
+
+    const currentRemaining = balance?.subscriptionCredits ?? 0;
+
+    if (currentRemaining <= targetRemaining) return;
+
+    const clampAmount = currentRemaining - targetRemaining;
+
+    const idempotencyKey = `DOWNGRADE_CLAMP:${organizationId}:${webhookEventId}`;
+
+    const already = await tx.creditLedgerEntry.findFirst({
+      where: { organizationId, idempotencyKey },
+      select: { id: true },
+    });
+
+    if (already) return;
+
+    await tx.creditLedgerEntry.create({
+      data: {
+        organizationId,
+        bucket: $Enums.CreditBucket.Subscription,
+        delta: -clampAmount,
+        reason: $Enums.CreditLedgerReason.PlanDowngradeClamp,
+        idempotencyKey,
+        featureKey: null,
+        jobId: null,
+        planVersionId: null,
+        actorUserId: null,
+      },
+    });
+
+    await tx.organizationCreditBalance.update({
+      where: { organizationId },
+      data: { subscriptionCredits: { decrement: clampAmount } },
+    });
+  }
+
   private async applyUpgradeCreditAdjustmentIfNeeded(
     tx: Prisma.TransactionClient,
     input: {
@@ -424,8 +530,12 @@ export class SubscriptionHandler {
     const { organizationId, webhookEventId, derivedStatus, oldPlanCode, newPlanCode } = input;
 
     if (derivedStatus !== $Enums.SubscriptionStatus.Active) return;
+
     if (!oldPlanCode || !newPlanCode) return;
+
     if (oldPlanCode === newPlanCode) return;
+
+    if (newPlanCode === FREE_PLAN_CODE) return;
 
     const schedule = await tx.organizationCreditSchedule.findUnique({
       where: { organizationId },
@@ -472,6 +582,12 @@ export class SubscriptionHandler {
 
     const used = Math.abs(usedAgg._sum.delta ?? 0);
     const targetRemaining = Math.max(0, newAlloc - used);
+
+    await tx.organizationCreditBalance.upsert({
+      where: { organizationId },
+      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      update: {},
+    });
 
     const balance = await tx.organizationCreditBalance.findUnique({
       where: { organizationId },

@@ -16,7 +16,7 @@ jobs:
     env:
       REGION: us-east4
       REPO: stactiq-containers
-      SERVICE: nest-console-api
+      SERVICE: credits-scheduler
       DOCKERFILE: infra/prod/console/api/Dockerfile
 
     steps:
