@@ -17,7 +17,7 @@ jobs:
       REGION: us-east4
       REPO: stactiq-containers
       SERVICE: credits-scheduler
-      DOCKERFILE: infra/prod/console/api/Dockerfile
+      DOCKERFILE: infra/prod/credits-scheduler/Dockerfile
 
     steps:
       - name: Checkout tag
@@ -52,7 +52,7 @@ jobs:
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy "$SERVICE" \
+          gcloud run jobs "$SERVICE" \
             --region "$REGION" \
             --image "$IMAGE" \
             --port 8080 \

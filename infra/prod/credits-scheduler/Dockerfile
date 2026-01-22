@@ -12,8 +12,8 @@ RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 FROM base AS pruner
 COPY . .
 
-# Scope by package name (best) OR by path. Package name is safer in turborepo.
-RUN npx turbo prune --scope=@repo/console-api --docker
+# Prune only what credits-scheduler needs
+RUN npx turbo prune --scope=@repo/credits-scheduler --docker
 
 # ---------- installer ----------
 FROM base AS installer
@@ -23,47 +23,43 @@ WORKDIR /app
 COPY --from=pruner /repo/out/json/ ./
 COPY --from=pruner /repo/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# Install deps without running scripts (Prisma postinstall is unsafe in pruned installs)
+# Install deps without running scripts (Prisma postinstall unsafe in pruned installs)
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # ---------- builder ----------
 FROM base AS builder
 WORKDIR /app
 
-# Copy the whole pruned workspace structure that pnpm installed into,
-# including per-package node_modules symlinks.
+# Copy installed workspace structure (node_modules symlinks etc.)
 COPY --from=installer /app/ ./
 
-# Overlay the full pruned sources
+# Overlay full pruned sources
 COPY --from=pruner /repo/out/full/ ./
 
-# Ensure lockfile is present for turbo workspace resolution
+# Ensure lockfile is present
 COPY --from=pruner /repo/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# OPTION A (safe): nuke TS incremental caches + stale dist ONLY in workspace code
-# Never touch node_modules/.pnpm because it contains Prisma engines "dist"
+# Clean caches (optional but consistent with your other Dockerfile)
 RUN find /app/apps /app/packages -name "*.tsbuildinfo" -delete 2>/dev/null || true
 RUN find /app/apps /app/packages -type d -name "dist" -prune -exec rm -rf {} + 2>/dev/null || true
 
-# Run sequentially to avoid prisma generate/build races
+# Prisma client generation (dummy DB url)
 ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public"
-
-# Generate Prisma client only where it exists
 RUN pnpm --filter @repo/prisma prisma:generate
-RUN pnpm turbo run build --filter=@repo/console-api...
+
+# Build only scheduler
+RUN pnpm turbo run build --filter=@repo/credits-scheduler...
 
 # ---------- runner ----------
 FROM node:24-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV PORT=8080
 
-# Prisma runtime needs openssl too
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-# Copy the whole built workspace so pnpm symlinks + workspace packages resolve at runtime
+# Copy the built workspace so workspace deps resolve at runtime
 COPY --from=builder /app/ ./
 
-EXPOSE 8080
-CMD ["node", "apps/console/api/dist/main"]
+# Adjust this path if your scheduler entry differs
+CMD ["node", "apps/credits-scheduler/dist/index.js"]
