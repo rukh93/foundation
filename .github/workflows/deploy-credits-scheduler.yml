@@ -52,8 +52,7 @@ jobs:
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
       - name: Deploy to Cloud Run
         run: |
-          gcloud run jobs "$SERVICE" \
+          gcloud run jobs deploy "$SERVICE" \
             --region "$REGION" \
             --image "$IMAGE" \
-            --port 8080 \
             --quiet
