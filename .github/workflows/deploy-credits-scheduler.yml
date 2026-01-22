@@ -16,7 +16,7 @@ jobs:
     env:
       REGION: us-east4
       REPO: stactiq-containers
-      SERVICE: credits-scheduler
+      SERVICE: credits-scheduler-30m
       DOCKERFILE: infra/prod/credits-scheduler/Dockerfile
 
     steps:
