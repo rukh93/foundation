@@ -20,10 +20,10 @@ CREATE TYPE "SubscriptionStatus" AS ENUM ('Active', 'PastDue', 'Canceled', 'Inco
 CREATE TYPE "BillingInterval" AS ENUM ('Monthly', 'Quarterly', 'Annual');
 
 -- CreateEnum
-CREATE TYPE "CreditBucket" AS ENUM ('Daily', 'Subscription', 'Purchased');
+CREATE TYPE "CreditBucket" AS ENUM ('Daily', 'Gift', 'Subscription', 'Purchased');
 
 -- CreateEnum
-CREATE TYPE "CreditLedgerReason" AS ENUM ('DailyGrant', 'SubscriptionGrant', 'SubscriptionReset', 'CreditPackPurchase', 'CreditPackRefund', 'JobBurn', 'ManualAdjustment', 'PlanUpgradeAdjustment', 'PlanDowngradeClamp');
+CREATE TYPE "CreditLedgerReason" AS ENUM ('DailyGrant', 'GiftGrant', 'FreeToPaidGiftCarryover', 'SubscriptionGrant', 'SubscriptionReset', 'CreditPackPurchase', 'CreditPackRefund', 'JobBurn', 'ManualAdjustment', 'PlanUpgradeAdjustment', 'PlanUpgradeFromFreeGrant', 'PlanDowngradeClamp');
 
 -- CreateTable
 CREATE TABLE "Language" (
@@ -99,6 +99,7 @@ CREATE TABLE "OrganizationCreditBalance" (
     "id" UUID NOT NULL,
     "organizationId" UUID NOT NULL,
     "dailyCredits" INTEGER NOT NULL DEFAULT 0,
+    "giftCredits" INTEGER NOT NULL DEFAULT 0,
     "subscriptionCredits" INTEGER NOT NULL DEFAULT 0,
     "purchasedCredits" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

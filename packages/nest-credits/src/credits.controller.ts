@@ -19,7 +19,8 @@ export class CreditsController {
       HttpStatus.OK,
       MessageAction.FIND_MANY,
       MessageEntity.CREDITS,
-      await this.creditsService.apply(user, body.delta, body.featureKey),
+      // @TODO FIX HERE
+      await this.creditsService.apply(user, body.delta, body.featureKey, crypto.randomUUID()),
     );
   }
 }

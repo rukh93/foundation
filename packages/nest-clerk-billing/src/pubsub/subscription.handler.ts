@@ -137,7 +137,7 @@ export class SubscriptionHandler {
           },
         });
 
-        if (!planDowngradedToFree) {
+        if (!planDowngradedToFree && !existing) {
           await this.ensureInitialSubscriptionCredits(tx, {
             organizationId: organization.id,
             derivedStatus,
@@ -152,6 +152,7 @@ export class SubscriptionHandler {
           derivedStatus,
           oldPlanCode: oldPlan,
           newPlanCode: currentPlanSlug,
+          anchorAt: periodStartToDate ?? nowUtc,
         });
 
         await this.applyDowngradeClampToFreeIfNeeded(tx, {
@@ -197,7 +198,7 @@ export class SubscriptionHandler {
   ) {
     await tx.organizationCreditBalance.upsert({
       where: { organizationId },
-      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      create: { organizationId, dailyCredits: 0, giftCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
       update: {},
     });
 
@@ -252,6 +253,7 @@ export class SubscriptionHandler {
       });
 
       if (!schedule) return;
+
       if (schedule.nextSubscriptionGrantAt.getTime() > nowUtc.getTime()) return;
 
       const cycleStart = schedule.nextSubscriptionGrantAt;
@@ -359,6 +361,7 @@ export class SubscriptionHandler {
       create: {
         organizationId,
         dailyCredits: 0,
+        giftCredits: 0,
         subscriptionCredits: 0,
         purchasedCredits: 0,
       },
@@ -519,7 +522,7 @@ export class SubscriptionHandler {
 
     await tx.organizationCreditBalance.upsert({
       where: { organizationId },
-      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      create: { organizationId, dailyCredits: 0, giftCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
       update: {},
     });
 
@@ -571,9 +574,10 @@ export class SubscriptionHandler {
       derivedStatus: $Enums.SubscriptionStatus;
       oldPlanCode: string | null;
       newPlanCode: string | null;
+      anchorAt: Date;
     },
   ) {
-    const { organizationId, webhookEventId, derivedStatus, oldPlanCode, newPlanCode } = input;
+    const { organizationId, webhookEventId, derivedStatus, oldPlanCode, newPlanCode, anchorAt } = input;
 
     if (derivedStatus !== $Enums.SubscriptionStatus.Active) return;
 
@@ -582,6 +586,103 @@ export class SubscriptionHandler {
     if (oldPlanCode === newPlanCode) return;
 
     if (newPlanCode === FREE_PLAN_CODE) return;
+
+    await tx.organizationCreditBalance.upsert({
+      where: { organizationId },
+      create: { organizationId, dailyCredits: 0, giftCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      update: {},
+    });
+
+    if (oldPlanCode === FREE_PLAN_CODE) {
+      const baseKey = `FREE_TO_PAID:${organizationId}:${webhookEventId}`;
+      const paidGrantKey = `${baseKey}:PAID_GRANT`;
+      const carryKey = `${baseKey}:CARRY`;
+
+      const alreadyGrant = await tx.creditLedgerEntry.findFirst({
+        where: { organizationId, idempotencyKey: paidGrantKey },
+        select: { id: true },
+      });
+
+      if (alreadyGrant) return;
+
+      const existingCarry = await tx.creditLedgerEntry.findFirst({
+        where: { organizationId, idempotencyKey: carryKey },
+        select: { id: true },
+      });
+
+      if (!existingCarry) {
+        const bal = await tx.organizationCreditBalance.findUnique({
+          where: { organizationId },
+          select: { subscriptionCredits: true },
+        });
+
+        const freeRemaining = bal?.subscriptionCredits ?? 0;
+
+        await tx.creditLedgerEntry.create({
+          data: {
+            organizationId,
+            bucket: $Enums.CreditBucket.Gift,
+            delta: freeRemaining,
+            reason: $Enums.CreditLedgerReason.FreeToPaidGiftCarryover,
+            idempotencyKey: carryKey,
+            featureKey: null,
+            jobId: null,
+            planVersionId: null,
+            actorUserId: null,
+          },
+        });
+
+        if (freeRemaining > 0) {
+          await tx.organizationCreditBalance.update({
+            where: { organizationId },
+            data: {
+              subscriptionCredits: { decrement: freeRemaining },
+              giftCredits: { increment: freeRemaining },
+            },
+          });
+        }
+      }
+
+      await tx.organizationCreditSchedule.upsert({
+        where: { organizationId },
+        create: {
+          organizationId,
+          subscriptionAnchorAt: anchorAt,
+          lastSubscriptionGrantAt: anchorAt,
+          nextSubscriptionGrantAt: addOneMonthUtc(anchorAt),
+        },
+        update: {
+          subscriptionAnchorAt: anchorAt,
+          lastSubscriptionGrantAt: anchorAt,
+          nextSubscriptionGrantAt: addOneMonthUtc(anchorAt),
+        },
+      });
+
+      const newAlloc = await this.resolveMonthlyCreditsForPlanAt(tx, newPlanCode, anchorAt);
+
+      await tx.creditLedgerEntry.create({
+        data: {
+          organizationId,
+          bucket: $Enums.CreditBucket.Subscription,
+          delta: newAlloc,
+          reason: $Enums.CreditLedgerReason.PlanUpgradeFromFreeGrant,
+          idempotencyKey: paidGrantKey,
+          featureKey: null,
+          jobId: null,
+          planVersionId: null,
+          actorUserId: null,
+        },
+      });
+
+      if (newAlloc > 0) {
+        await tx.organizationCreditBalance.update({
+          where: { organizationId },
+          data: { subscriptionCredits: { increment: newAlloc } },
+        });
+      }
+
+      return;
+    }
 
     const schedule = await tx.organizationCreditSchedule.findUnique({
       where: { organizationId },
@@ -628,12 +729,6 @@ export class SubscriptionHandler {
 
     const used = Math.abs(usedAgg._sum.delta ?? 0);
     const targetRemaining = Math.max(0, newAlloc - used);
-
-    await tx.organizationCreditBalance.upsert({
-      where: { organizationId },
-      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
-      update: {},
-    });
 
     const balance = await tx.organizationCreditBalance.findUnique({
       where: { organizationId },

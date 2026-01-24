@@ -134,7 +134,13 @@ export class MonthlyGrantHandler {
   ) {
     await tx.organizationCreditBalance.upsert({
       where: { organizationId },
-      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      create: {
+        organizationId,
+        dailyCredits: 0,
+        giftCredits: 0,
+        subscriptionCredits: 0,
+        purchasedCredits: 0,
+      },
       update: {},
     });
 
