@@ -22,6 +22,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@repo/nest-clerk": "workspace:*",
     "@repo/nest-prisma": "workspace:*",
     "@repo/nest-pubsub": "workspace:*",
     "@repo/nest-shared": "workspace:*",

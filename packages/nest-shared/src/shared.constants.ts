@@ -24,6 +24,7 @@ export const MessageAction = {
 export const MessageEntity = {
   CLERK: 'CLERK',
   CLERK_ROLE_MAPPER: 'CLERK_ROLE_MAPPER',
+  CREDITS: 'CREDITS',
   LANGUAGE: 'LANGUAGE',
   MEILISEARCH: 'MEILISEARCH',
   ORGANIZATION: 'ORGANIZATION',

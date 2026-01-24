@@ -1,4 +1,4 @@
-import { Building, CreditCard, GaugeCircle, Shield, UserRound, UsersRound } from 'lucide-react';
+import { Building, CreditCard, GaugeCircle, Plus, Shield, UserRound, UsersRound } from 'lucide-react';
 
 import { Routes } from '@/app/(admin)/routes';
 import type { Group } from '@/features/sidebar/types';
@@ -12,6 +12,11 @@ export const generalGroups: Group[] = [
         icon: GaugeCircle,
         url: Routes.OVERVIEW,
       },
+      {
+        title: 'feature',
+        icon: Plus,
+        url: Routes.FEATURE,
+      }
     ],
   },
 ];
