@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@repo/nest-prisma';
 import { PubSubHandler } from '@repo/nest-pubsub';
-import { addOneMonthUtc } from '@repo/nest-shared';
+import { addOneMonthUtc, isEntitledNow } from '@repo/nest-shared';
 import { $Enums, Prisma } from '@repo/prisma';
 
 import type { MonthlyGrantMessage } from '../credits.types';
@@ -48,9 +48,7 @@ export class MonthlyGrantHandler {
 
         if (sub.currentStatus !== $Enums.SubscriptionStatus.Active) return;
 
-        if (sub.currentPeriodEnd instanceof Date) {
-          if (nowUtc.getTime() >= sub.currentPeriodEnd.getTime()) return;
-        }
+        if (!isEntitledNow(nowUtc, sub.currentPeriodEnd)) return;
 
         const planCode = sub.currentPlanSlug;
 

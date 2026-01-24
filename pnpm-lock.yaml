@@ -99,6 +99,9 @@ importers:
       '@repo/nest-clerk-billing':
         specifier: workspace:*
         version: link:../../../packages/nest-clerk-billing
+      '@repo/nest-credits':
+        specifier: workspace:*
+        version: link:../../../packages/nest-credits
       '@repo/nest-language':
         specifier: workspace:*
         version: link:../../../packages/nest-language

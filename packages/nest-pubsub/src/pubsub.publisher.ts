@@ -26,9 +26,12 @@ export class PubSubPublisher implements OnModuleInit {
 
   async setupMultipleTopics() {
     for (const config of this.config.emulator.topics) {
-      const [topic] = await this.pubsub.topic(config.name).get({
-        autoCreate: true,
-      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const topicName: string | undefined = this.config.topics[config.name];
+
+      if (!topicName) continue;
+
+      const [topic] = await this.pubsub.topic(topicName).get({ autoCreate: true });
 
       for (const sub of config.subscriptions) {
         const subscription = topic.subscription(sub);

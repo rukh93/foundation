@@ -8,6 +8,11 @@ import type { GrantDispatchMessage } from './types';
 
 const prisma = createPrismaClient(process.env.DATABASE_URL!);
 
+function isUnlimitedPeriodEnd(d: Date | null): boolean {
+  if (!(d instanceof Date)) return true;
+  return d.getTime() <= 0;
+}
+
 async function main() {
   const topicName = process.env.PUBSUB_TOPIC_NAME_SUB_GRANTS!;
   const batchSize = Number(process.env.CREDITS_SCHEDULER_BATCH_SIZE ?? 500);
@@ -75,7 +80,7 @@ async function main() {
       const periodEnd = sub?.currentPeriodEnd ?? null;
 
       const isActive = status === 'Active';
-      const hasAccessNow = isActive && (!(periodEnd instanceof Date) || nowUtc.getTime() < periodEnd.getTime());
+      const hasAccessNow = isActive && (isUnlimitedPeriodEnd(periodEnd) || nowUtc.getTime() < periodEnd.getTime());
 
       if (!hasAccessNow) continue;
 

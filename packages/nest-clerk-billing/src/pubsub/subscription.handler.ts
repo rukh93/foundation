@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { WebhookMessage } from '@repo/nest-clerk';
 import { PrismaService } from '@repo/nest-prisma';
 import { PubSubHandler } from '@repo/nest-pubsub';
-import { addOneMonthUtc } from '@repo/nest-shared';
+import { addOneMonthUtc, isEntitledNow } from '@repo/nest-shared';
 import { WebhookEventService } from '@repo/nest-webhook-event';
 import {
   $Enums,
@@ -216,9 +216,7 @@ export class SubscriptionHandler {
 
       if (sub.currentStatus !== $Enums.SubscriptionStatus.Active) return;
 
-      if (sub.currentPeriodEnd instanceof Date) {
-        if (nowUtc.getTime() >= sub.currentPeriodEnd.getTime()) return;
-      }
+      if (!isEntitledNow(nowUtc, sub.currentPeriodEnd)) return;
 
       const planCode = sub.currentPlanSlug;
 

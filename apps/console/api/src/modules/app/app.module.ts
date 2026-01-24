@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClerkModule } from '@repo/nest-clerk';
 import { ClerkBillingModule } from '@repo/nest-clerk-billing';
+import { CreditsModule } from '@repo/nest-credits';
 import { LanguageModule } from '@repo/nest-language';
 import { OrganizationModule } from '@repo/nest-organization';
 import { OrganizationMembershipModule } from '@repo/nest-organization-membership';
@@ -19,6 +20,7 @@ import { UserModule } from '@repo/nest-user';
     LanguageModule,
     ClerkModule,
     ClerkBillingModule,
+    CreditsModule,
     UserModule,
     OrganizationModule,
     OrganizationMembershipModule,

@@ -5,11 +5,11 @@ import { PubSubRouter } from './pubsub.router';
 import type { PubSubPushEnvelope } from './pubsub.types';
 import { decodePubSubMessageData } from './pubsub.utils';
 
-@Controller()
+@Controller('pubsub')
 export class PubSubPushController {
   constructor(private readonly router: PubSubRouter) {}
 
-  @Post('/pubsub/push')
+  @Post('push')
   @HttpCode(204)
   @UseGuards(PubSubPushAuthGuard)
   async handlePush(@Body() body: PubSubPushEnvelope): Promise<void> {

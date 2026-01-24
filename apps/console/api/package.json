@@ -39,6 +39,7 @@
     "@nestjs/platform-fastify": "^11.1.11",
     "@repo/nest-clerk": "workspace:*",
     "@repo/nest-clerk-billing": "workspace:*",
+    "@repo/nest-credits": "workspace:*",
     "@repo/nest-language": "workspace:*",
     "@repo/nest-organization": "workspace:*",
     "@repo/nest-organization-membership": "workspace:*",
