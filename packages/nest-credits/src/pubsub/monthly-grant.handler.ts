@@ -76,16 +76,7 @@ export class MonthlyGrantHandler {
 
         const creditsToGrant = planVersion.monthlyCredits ?? 0;
 
-        await tx.organizationCreditBalance.upsert({
-          where: { organizationId },
-          create: {
-            organizationId,
-            dailyCredits: 0,
-            subscriptionCredits: 0,
-            purchasedCredits: 0,
-          },
-          update: {},
-        });
+        await this.resetSubscriptionCreditsForCycle(tx, organizationId, cycleStart);
 
         const idempotencyKey = `SUB_GRANT:${organizationId}:${cycleStart.toISOString()}`;
 
@@ -133,6 +124,55 @@ export class MonthlyGrantHandler {
           },
         });
       }
+    });
+  }
+
+  private async resetSubscriptionCreditsForCycle(
+    tx: Prisma.TransactionClient,
+    organizationId: string,
+    cycleStart: Date,
+  ) {
+    await tx.organizationCreditBalance.upsert({
+      where: { organizationId },
+      create: { organizationId, dailyCredits: 0, subscriptionCredits: 0, purchasedCredits: 0 },
+      update: {},
+    });
+
+    const bal = await tx.organizationCreditBalance.findUnique({
+      where: { organizationId },
+      select: { subscriptionCredits: true },
+    });
+
+    const currentRemaining = bal?.subscriptionCredits ?? 0;
+
+    if (currentRemaining <= 0) return;
+
+    const resetKey = `SUB_RESET:${organizationId}:${cycleStart.toISOString()}`;
+
+    const existingReset = await tx.creditLedgerEntry.findFirst({
+      where: { organizationId, idempotencyKey: resetKey },
+      select: { id: true },
+    });
+
+    if (existingReset) return;
+
+    await tx.creditLedgerEntry.create({
+      data: {
+        organizationId,
+        bucket: $Enums.CreditBucket.Subscription,
+        delta: -currentRemaining,
+        reason: $Enums.CreditLedgerReason.SubscriptionReset,
+        idempotencyKey: resetKey,
+        featureKey: null,
+        jobId: null,
+        planVersionId: null,
+        actorUserId: null,
+      },
+    });
+
+    await tx.organizationCreditBalance.update({
+      where: { organizationId },
+      data: { subscriptionCredits: { decrement: currentRemaining } },
     });
   }
 }
